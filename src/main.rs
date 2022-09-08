@@ -1,42 +1,45 @@
-use std::io::stdin;
-
+#[allow(unused_variables)]
+fn solve<R: std::io::BufRead, W: std::io::Write>(scanner: &mut Scanner<R>, writer: &mut W) {
+    println!("Hello World!");
+}
+ 
 fn main() {
-    let t: i32 = read_line().parse().unwrap();
-    for _ in 0..t {
-        let n: i32 = read_line().parse().unwrap();
-        let mut arr: Vec<i32> = read_line_vector();
-        if n == 1 {
-            println!("1");
-            continue;
-        }
-        arr.sort();
-        let mut concurrent: bool = false;
+    let (stdin, stdout) = (std::io::stdin(), std::io::stdout());
+    let mut writer = std::io::BufWriter::new(stdout.lock());
+    let mut scanner = Scanner::new(stdin.lock());
+    solve(&mut scanner,&mut writer);
+}
 
-        for i in 1..n {
-            if arr[i as usize] - arr[(i - 1) as usize] == 1 {
-                concurrent = true;
-                break;
+#[allow(dead_code)]
+struct Scanner<R> {
+    reader: R,
+    line: Vec<u8>,
+    ptr: usize
+ 
+}
+
+impl<R: std::io::BufRead> Scanner<R> {
+    fn new(reader: R) -> Self {
+        return Self {reader, line: vec![], ptr: 0};
+    }
+    #[allow(dead_code)]
+    fn scan<T: std::str::FromStr>(&mut self) -> T {
+        loop {
+            while self.ptr < self.line.len() && self.line[self.ptr].is_ascii_whitespace() {
+                self.ptr += 1;
             }
-        }
-
-        if concurrent {
-            println!("2");
-        } else {
-            println!("1");
+            if self.ptr != self.line.len() {
+                let start = self.ptr;
+                while self.ptr < self.line.len() && !self.line[self.ptr].is_ascii_whitespace() {
+                    self.ptr += 1;
+                }
+                return std::str::from_utf8(&self.line[start..self.ptr]).unwrap().parse().ok().
+                    expect("parse error");
+            }
+            self.line.clear();
+            self.reader.read_until(b'\n', &mut self.line).expect("read error");
+            self.ptr = 0;
         }
     }
-}
-
-fn read_line() -> String {
-    let mut line = String::new();
-    stdin().read_line(&mut line).unwrap();
-    line.trim().to_string()
-}
-
-fn read_line_vector() -> Vec<i32> {
-    let mut line = String::new();
-    stdin().read_line(&mut line).unwrap();
-    line.split_whitespace()
-        .map(|s| s.parse().unwrap())
-        .collect()
+ 
 }
