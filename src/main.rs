@@ -1,7 +1,22 @@
 #[allow(unused_assignments)]
 #[allow(unused_variables)]
 fn solve<R: std::io::BufRead, W: std::io::Write>(sc: &mut Scanner<R>, wr: &mut W) {
-    
+    let t: u32 = sc.next();
+    for _ in 0..t {
+        let n: usize = sc.next();
+        let arr: Vec<i32> = (0..n).map(|_| sc.next()).collect();
+        let mut ans = "YES";
+        let mut pre = arr[0] % 2 == 0;
+        for i in 1..n {
+            let now= arr[i] % 2 == 0;
+            if now ^ pre {
+                ans = "NO";
+                break;
+            }
+            pre=now;
+        }
+        writeln!(wr, "{}", ans).unwrap();
+    }
 }
 
 fn main() {
@@ -11,10 +26,11 @@ fn main() {
             let mut sc = Scanner::new(std::io::BufReader::new(file));
             let mut wr = std::io::BufWriter::new(std::io::stdout());
             match std::fs::File::create("output.txt") {
-               Ok(file) => {
-                   let mut wr = std::io::BufWriter::new(file);
-                   solve(&mut sc, &mut wr);
-               }Err(_) => {}
+                Ok(file) => {
+                    let mut wr = std::io::BufWriter::new(file);
+                    solve(&mut sc, &mut wr);
+                }
+                Err(_) => {}
             }
             solve(&mut sc, &mut wr);
         }
