@@ -1,44 +1,29 @@
 #[allow(unused_assignments)]
 #[allow(unused_variables)]
 fn solve<R: std::io::BufRead, W: std::io::Write>(sc: &mut Scanner<R>, wr: &mut W) {
-    let t: u32 = sc.next();
-    for _ in 0..t {
-        let n: usize = sc.next();
-        let arr: Vec<i32> = (0..n).map(|_| sc.next()).collect();
-        let mut ans = "YES";
-        let mut pre = arr[0] % 2 == 0;
-        for i in 1..n {
-            let now= arr[i] % 2 == 0;
-            if now ^ pre {
-                ans = "NO";
-                break;
-            }
-            pre=now;
-        }
-        writeln!(wr, "{}", ans).unwrap();
-    }
+    
 }
 
 fn main() {
-    let mut sc = Scanner::new(std::io::stdin().lock());
-    match std::fs::File::open("input.txt") {
+    match std::fs::File::open("C:\\Users\\Fahim\\Rusty\\cp_with_rust\\src\\input.txt") {
         Ok(file) => {
             let mut sc = Scanner::new(std::io::BufReader::new(file));
-            let mut wr = std::io::BufWriter::new(std::io::stdout());
-            match std::fs::File::create("output.txt") {
+            match std::fs::File::create("C:\\Users\\Fahim\\Rusty\\cp_with_rust\\src\\output.txt") {
                 Ok(file) => {
-                    let mut wr = std::io::BufWriter::new(file);
-                    solve(&mut sc, &mut wr);
+                    solve(&mut sc, &mut std::io::BufWriter::new(file));
                 }
-                Err(_) => {}
+                Err(_) => {
+                    solve(&mut sc, &mut std::io::BufWriter::new(std::io::stdout()));
+                }
             }
-            solve(&mut sc, &mut wr);
         }
-        Err(_) => {}
+        Err(_) => {
+            solve(
+                &mut Scanner::new(std::io::stdin().lock()),
+                &mut std::io::BufWriter::new(std::io::stdout().lock()),
+            );
+        }
     }
-    let stdout = std::io::stdout();
-    let mut wr = std::io::BufWriter::new(stdout.lock());
-    solve(&mut sc, &mut wr);
 }
 
 #[allow(dead_code)]
