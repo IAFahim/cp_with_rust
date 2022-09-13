@@ -1,15 +1,28 @@
 #[allow(unused_assignments)]
 #[allow(unused_variables)]
 fn solve<R: std::io::BufRead, W: std::io::Write>(sc: &mut Scanner<R>, wr: &mut W) {
-    let n: u32 = sc.next();
-    for _ in 0..n {
-        let n: f64 = sc.next();
-        let x: f64 = sc.next();
-        let mut ans:f64 = 1.0;
-        if 2.0 < n {
-            ans= ((n - 2.0) / x) + 1.0;
+    let t: u32 = sc.next();
+    for _ in 0..t {
+        let n:u32 = sc.next();
+        let a:Vec<u32> = (0..n).map(|_| sc.next()).collect();
+        let mut b:Vec<u32> = a.clone();
+        let mut fst=0;
+        let mut lst=a.len()-1;
+        let mut flip_flop=true;
+        for i in 0..a.len() {
+            if flip_flop{
+                b[i]=a[fst];
+                fst+=1;
+            }else{
+                b[i]=a[lst];
+                lst-=1;
+            }
+            flip_flop=!flip_flop;
         }
-        writeln!(wr, "{}", ans.ceil() as i32).ok();
+        for i in 0..b.len() {
+            write!(wr, "{} ", b[i]).ok();
+        }
+        writeln!(wr, "").ok();
     }
 }
 
